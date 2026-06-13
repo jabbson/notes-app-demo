@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Notes</title>
   <link rel="stylesheet" href="styles.css" />
+  <!-- Apply saved theme before paint to avoid a flash of the wrong theme. -->
+  <script>
+    try {
+      const t = localStorage.getItem("notes-app.theme");
+      if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch {}
+  </script>
 </head>
 <body>
   <div class="app">
@@ -12,7 +19,10 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <h1>Notes</h1>
-        <button id="new-note" class="btn-new" title="New note">+ New</button>
+        <div class="header-actions">
+          <button id="theme-toggle" class="btn-theme" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+          <button id="new-note" class="btn-new" title="New note">+ New</button>
+        </div>
       </div>
       <input id="search" class="search" type="search" placeholder="Search notes…" />
       <ul id="note-list" class="note-list"></ul>
