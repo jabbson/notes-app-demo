@@ -1,6 +1,7 @@
 // ---------- Simple note-taking app (vanilla JS + localStorage) ----------
 
 const STORAGE_KEY = "notes-app.notes";
+const THEME_KEY = "notes-app.theme";
 
 // DOM refs
 const noteList = document.getElementById("note-list");
@@ -13,6 +14,7 @@ const contentEl = document.getElementById("content");
 const metaEl = document.getElementById("meta");
 const deleteBtn = document.getElementById("delete-note");
 const toolbar = document.querySelector(".toolbar");
+const themeToggle = document.getElementById("theme-toggle");
 
 let notes = load();
 let activeId = null;
@@ -32,6 +34,25 @@ function save() {
 
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+// ---------- Theme ----------
+function currentTheme() {
+  return document.documentElement.getAttribute("data-theme") === "dark"
+    ? "dark"
+    : "light";
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
+  themeToggle.title = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+}
+
+function toggleTheme() {
+  const next = currentTheme() === "dark" ? "light" : "dark";
+  applyTheme(next);
+  localStorage.setItem(THEME_KEY, next);
 }
 
 // ---------- Rendering ----------
@@ -156,6 +177,7 @@ toolbar.addEventListener("click", (e) => {
 
 // ---------- Event wiring ----------
 newBtn.addEventListener("click", createNote);
+themeToggle.addEventListener("click", toggleTheme);
 deleteBtn.addEventListener("click", deleteNote);
 searchInput.addEventListener("input", renderList);
 titleInput.addEventListener("input", syncActive);
@@ -169,5 +191,6 @@ contentEl.addEventListener("keyup", (e) => {
 });
 
 // ---------- Init ----------
+applyTheme(currentTheme());
 renderList();
 renderEditor();
